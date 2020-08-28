@@ -1,22 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "./App.css";
 
+import { GlobalContext } from "./context/GlobalState";
+
 function App() {
+  const context = useContext(GlobalContext);
+
   const [text, setText] = useState("");
-  const [expense, setExpense] = useState("");
+  const [transiction, setTransiction] = useState("");
 
   const onChangeText = (e) => {
     setText(e.target.value);
   };
 
   const onChangeNumber = (e) => {
-    setExpense(e.target.value);
+    setTransiction(e.target.value);
   };
 
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log(text, expense);
+    console.log(text, transiction);
   };
+
+  const { items } = context;
+  console.log(items);
+
   return (
     <div className="App">
       <div className="container">
@@ -42,20 +50,19 @@ function App() {
           <div className="history">
             <h1>History</h1>
           </div>
-          <div className="historyList">
-            <p>Cash</p>
-            <p>100</p>
-          </div>
+          {items.map((item) => {
+            return (
+              <div className={item.transictionType}>
+                <p>{item.text}</p>
+                <p>{item.transiction}</p>
+              </div>
+            );
+          })}
 
           <div className="transiction">
             <h1>Add new Transiction </h1>
             <div>
-              <form
-                className="form"
-                onSubmit={(e) => {
-                  submitHandler(e);
-                }}
-              >
+              <form className="form" onSubmit={submitHandler}>
                 <label>
                   Text
                   <br />
@@ -63,12 +70,17 @@ function App() {
                 <input
                   type="text"
                   className="input"
+                  required
+                  placeholder="Enter your Text"
                   onChange={(e) => onChangeText(e)}
                 />
+
                 <br />
                 <label>Amount + for Income and - for expense</label>
                 <input
                   type="number"
+                  required
+                  placeholder="Enter the Amount"
                   className="input"
                   onChange={(e) => onChangeNumber(e)}
                 />
