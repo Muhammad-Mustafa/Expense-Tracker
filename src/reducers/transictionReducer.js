@@ -16,6 +16,19 @@ export const transictionReducer = (state, action) => {
           },
         ],
       };
+
+    case "INCOME":
+      return {
+        ...state,
+        income: state.income + action.income,
+      };
+
+    case "EXPENSE":
+      return {
+        ...state,
+        expense: state.expense - -action.expense,
+      };
+
     default:
       return state;
   }

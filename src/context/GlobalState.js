@@ -30,6 +30,9 @@ let initState = {
       transiction: "-200",
     },
   ],
+  income: 0,
+  expense: 0,
+  totalBalance: 0,
 };
 
 // creating the context
@@ -40,7 +43,6 @@ export const GlobalContext = createContext();
 
 export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(transictionReducer, initState);
-  console.log(initState);
   return (
     <GlobalContext.Provider value={{ ...state, dispatch }}>
       {/* {console.log(childern)} */}

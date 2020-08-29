@@ -7,8 +7,8 @@ import { findAllByTestId } from "@testing-library/react";
 function App() {
   const context = useContext(GlobalContext);
   const { dispatch } = useContext(GlobalContext);
-
-  const { items } = context;
+  // const {getIncome} = useContext(GlobalContext)
+  const { items, income, expense, totalBalance } = context;
   // console.log(items);
 
   const [text, setText] = useState("");
@@ -24,24 +24,21 @@ function App() {
   };
 
   const checkTransitionType = (transiction) => {
-
     // console.log(Number(transiction))
     if (Number(transiction) < 0) {
-      console.log('------------')
-      return("expense-transiction");
+      console.log("------------");
+      return "expense-transiction";
     } else if (Number(transiction) > 0) {
-      return("income-transiction");
+      return "income-transiction";
     }
-    }
-    
+  };
 
   const submitHandler = (e) => {
     e.preventDefault();
-    if(Number(transiction) == 0){
-      alert('Zero is not a valid transiction')
+    if (Number(transiction) == 0) {
+      alert("Zero is not a valid transiction");
       return false;
-    }
-    else{
+    } else {
       dispatch({
         type: "ADD_TRANSICTION",
         items: {
@@ -50,6 +47,17 @@ function App() {
           transictionType: checkTransitionType(transiction),
         },
       });
+      if (Number(transiction) > 0) {
+        dispatch({
+          type: "INCOME",
+          income: Number(transiction),
+        });
+      } else if (Number(transiction) < 0) {
+        dispatch({
+          type: "EXPENSE",
+          expense: Number(transiction),
+        });
+      }
       setText("");
       setTransiction("");
     }
@@ -63,17 +71,17 @@ function App() {
           <br />
           <div className="balance">
             <h3>Your Balance</h3>
-            <h1>$260.00</h1>
+            <h1>${income + expense}</h1>
           </div>
 
           <div className="income-expense">
             <div className="income">
               <h3>Income</h3>
-              <h1 style={{ color: "green" }}>$100</h1>
+              <h1 style={{ color: "green" }}>${income}</h1>
             </div>
             <div className="expense">
               <h3>expense</h3>
-              <h1 style={{ color: "red" }}>$100</h1>
+              <h1 style={{ color: "red" }}>${expense}</h1>
             </div>
           </div>
           <br />
