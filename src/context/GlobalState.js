@@ -1,8 +1,9 @@
 import React, { createContext, useReducer } from "react";
+import { transictionReducer } from "../reducers/transictionReducer";
 
 //initializing the state
 
-const initState = {
+let initState = {
   items: [
     {
       id: 1,
@@ -38,10 +39,10 @@ export const GlobalContext = createContext();
 //Provider
 
 export const GlobalProvider = ({ children }) => {
-  //   const [state, dispatch] = useReducer(AppReducer, initState);
-
+  const [state, dispatch] = useReducer(transictionReducer, initState);
+  console.log(initState);
   return (
-    <GlobalContext.Provider value={{ ...initState }}>
+    <GlobalContext.Provider value={{ ...state, dispatch }}>
       {/* {console.log(childern)} */}
       {children}
     </GlobalContext.Provider>

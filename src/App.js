@@ -2,12 +2,18 @@ import React, { useState, useContext } from "react";
 import "./App.css";
 
 import { GlobalContext } from "./context/GlobalState";
+import { findAllByTestId } from "@testing-library/react";
 
 function App() {
   const context = useContext(GlobalContext);
+  const { dispatch } = useContext(GlobalContext);
+
+  const { items } = context;
+  // console.log(items);
 
   const [text, setText] = useState("");
   const [transiction, setTransiction] = useState("");
+  const [transictionType, setTransictionType] = useState("");
 
   const onChangeText = (e) => {
     setText(e.target.value);
@@ -17,13 +23,37 @@ function App() {
     setTransiction(e.target.value);
   };
 
+  const checkTransitionType = (transiction) => {
+
+    // console.log(Number(transiction))
+    if (Number(transiction) < 0) {
+      console.log('------------')
+      return("expense-transiction");
+    } else if (Number(transiction) > 0) {
+      return("income-transiction");
+    }
+    }
+    
+
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log(text, transiction);
+    if(Number(transiction) == 0){
+      alert('Zero is not a valid transiction')
+      return false;
+    }
+    else{
+      dispatch({
+        type: "ADD_TRANSICTION",
+        items: {
+          text: text,
+          transiction: Number(transiction),
+          transictionType: checkTransitionType(transiction),
+        },
+      });
+      setText("");
+      setTransiction("");
+    }
   };
-
-  const { items } = context;
-  console.log(items);
 
   return (
     <div className="App">
@@ -52,7 +82,7 @@ function App() {
           </div>
           {items.map((item) => {
             return (
-              <div className={item.transictionType}>
+              <div className={item.transictionType} key={item.id}>
                 <p>{item.text}</p>
                 <p>{item.transiction}</p>
               </div>
@@ -73,6 +103,7 @@ function App() {
                   required
                   placeholder="Enter your Text"
                   onChange={(e) => onChangeText(e)}
+                  value={text}
                 />
 
                 <br />
@@ -83,6 +114,7 @@ function App() {
                   placeholder="Enter the Amount"
                   className="input"
                   onChange={(e) => onChangeNumber(e)}
+                  value={transiction}
                 />
                 <input className="submit" type="submit" value="submit" />
               </form>
